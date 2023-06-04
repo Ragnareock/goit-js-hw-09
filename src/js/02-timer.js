@@ -1,6 +1,7 @@
 import flatpickr from 'flatpickr';
 import Notiflix from 'notiflix';
 import 'flatpickr/dist/flatpickr.min.css';
+import 'flatpickr/dist/themes/dark.css';
 
 const inputEl = document.getElementById('datetime-picker');
 const btnStartEl = document.querySelector('[data-start]');
@@ -19,9 +20,9 @@ const options = {
   onClose(selectedDates) {
     console.log(selectedDates[0]);
     if (selectedDates[0] < Date.now()) {
-      Notiflix.Notify.failure('Qui timide rogat docet negare');
+      Notiflix.Notify.failure('Need to set a future date');
     } else {
-      Notiflix.Notify.success('Sol lucet omnibus');
+      Notiflix.Notify.success('Date set correctly');
       btnStartEl.removeAttribute('disabled');
     }
   },
@@ -54,7 +55,7 @@ const timing = flatpickr(inputEl, options);
 
 const timer = {
   start() {
-    this.intervalId = setInterval(() => {
+    setInterval(() => {
       const deltaTime = timing.selectedDates[0] - Date.now();
       const { days, hours, minutes, seconds } = convertMs(deltaTime);
 
@@ -62,10 +63,6 @@ const timer = {
       markHoursEl.textContent = addLeadingZero(hours);
       markMinutesEl.textContent = addLeadingZero(minutes);
       markSecondsEl.textContent = addLeadingZero(seconds);
-
-      if (deltaTime < 1000) {
-        clearInterval(this.intervalId);
-      }
     }, 1000);
   },
 };
