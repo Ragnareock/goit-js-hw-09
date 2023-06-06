@@ -18,7 +18,6 @@ const options = {
   defaultDate: new Date(),
   minuteIncrement: 1,
   onClose(selectedDates) {
-    console.log(selectedDates[0]);
     if (selectedDates[0] < Date.now()) {
       Notiflix.Notify.failure('Need to set a future date');
     } else {
@@ -55,14 +54,19 @@ const timing = flatpickr(inputEl, options);
 
 const timer = {
   start() {
-    setInterval(() => {
-      const deltaTime = timing.selectedDates[0] - Date.now();
+    this.intervalId = setInterval(() => {
+      const currentTime = Date.now();
+      const deltaTime = timing.selectedDates[0] - currentTime;
       const { days, hours, minutes, seconds } = convertMs(deltaTime);
 
       markDaysEl.textContent = addLeadingZero(days);
       markHoursEl.textContent = addLeadingZero(hours);
       markMinutesEl.textContent = addLeadingZero(minutes);
       markSecondsEl.textContent = addLeadingZero(seconds);
+
+      if (deltaTime < 1000) {
+        clearInterval(this.intervalId);
+      }
     }, 1000);
   },
 };
